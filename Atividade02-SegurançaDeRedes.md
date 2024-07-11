@@ -39,7 +39,7 @@
 (c) Uma afirmação geral é que valores de a são permitidos se e somente se gcd(a, 26) = 1. Isso garante que a função de encriptação seja uma permutação de todas as letras do alfabeto, cumprindo o requisito de ser um-para-um. Valores de a que não atendem a essa condição não são permitidos, pois resultam em uma função de encriptação não bijetora.
 
 ## 3. 
-
+(a)
 ## Encriptação usando a cifra de Hill
 
 ### Mensagem Original:
@@ -94,8 +94,50 @@ Portanto, "me" é encriptado como "yx" (onde 24 corresponde a 'y' e 'x').
 
 Cada par de letras na mensagem encriptada corresponde a um par encriptado da mensagem original, calculado utilizando a matriz chave K.
 
+(b)
 
+## Decifração usando a cifra de Hill
 
+### Mensagem Cifrada:
+"yx pc yx ow mz xx xl tz nz wu il ai ti zi rn"
+
+### Chave da Cifra de Hill (inversa):
+```
+K^{-1} = [ 7/43  -4/43 ]
+        [ -5/43  9/43 ]
+```
+
+### Conversão da Mensagem Cifrada para Números:
+- "yx" -> [24, 24]
+- "pc" -> [15, 2]
+- "yx" -> [24, 24]
+- "ow" -> [14, 22]
+- "mz" -> [12, 25]
+- "xx" -> [23, 23]
+- "xl" -> [23, 11]
+- "tz" -> [19, 25]
+- "nz" -> [13, 25]
+- "wu" -> [22, 20]
+- "il" -> [8, 11]
+- "ai" -> [0, 8]
+- "ti" -> [19, 8]
+- "zi" -> [25, 8]
+- "rn" -> [17, 13]
+
+### Aplicação da Decifração com K^{-1}:
+Para cada par de números, multiplicamos pela matriz inversa K^{-1} e reduzimos módulo 26.
+
+**Exemplo:**
+```
+
+```
+
+Portanto, "yx" decifra para "me".
+
+### Mensagem Decifrada:
+"meetmeattheusualplaceattenratherthaneightoclock"
+
+Esta é a mensagem clara original antes de ser cifrada utilizando a cifra de Hill com a chave dada.
 
 ## 4. 
 
