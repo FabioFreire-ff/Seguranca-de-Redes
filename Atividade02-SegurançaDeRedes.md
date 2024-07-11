@@ -42,7 +42,166 @@
 
 ## 4. 
 
+## Código
+
+```python
+def encrypt(text, shift):
+    encrypted_text = ""
+    for char in text:
+        if char.isalpha():
+            shifted = ord(char) + shift
+            if char.islower():
+                if shifted > ord('z'):
+                    shifted -= 26
+            elif char.isupper():
+                if shifted > ord('Z'):
+                    shifted -= 26
+            encrypted_text += chr(shifted)
+        else:
+            encrypted_text += char
+    return encrypted_text
+
+def decrypt(text, shift):
+    decrypted_text = ""
+    for char in text:
+        if char.isalpha():
+            shifted = ord(char) - shift
+            if char.islower():
+                if shifted < ord('a'):
+                    shifted += 26
+            elif char.isupper():
+                if shifted < ord('A'):
+                    shifted += 26
+            decrypted_text += chr(shifted)
+        else:
+            decrypted_text += char
+    return decrypted_text
+
+def main():
+    text = input("Digite o texto: ")
+    shift = int(input("Digite o valor do deslocamento (número inteiro): "))
+
+    encrypted_text = encrypt(text, shift)
+    print("Texto criptografado:", encrypted_text)
+
+    decrypted_text = decrypt(encrypted_text, shift)
+    print("Texto descriptografado:", decrypted_text)
+
+if __name__ == "__main__":
+    main()
+```
+
 ## 5.
 
+## Código
+
+```python
+def decrypt_caesar(ciphertext, shift):
+    plaintext = ''
+    for char in ciphertext:
+        if char.isalpha():
+            shifted_char = chr(((ord(char) - ord('A') - shift) % 26) + ord('A')) if char.isupper() else chr(((ord(char) - ord('a') - shift) % 26) + ord('a'))
+            plaintext += shifted_char
+        else:
+            plaintext += char
+    return plaintext
+
+def get_word_frequencies(text):
+    word_list = text.split()
+    word_count = {}
+    for word in word_list:
+        word_count[word] = word_count.get(word, 0) + 1
+    return word_count
+
+def attack_caesar_cipher(ciphertext, num_attempts=10):
+    possible_messages = []
+    for shift in range(26):
+        decrypted_text = decrypt_caesar(ciphertext, shift)
+        possible_messages.append((decrypted_text, get_word_frequencies(decrypted_text)))
+    sorted_messages = sorted(possible_messages, key=lambda x: sum(x[1].values()), reverse=True)
+    return sorted_messages[:num_attempts]
+
+if __name__ == "__main__":
+    ciphertext = input("Digite o texto cifrado: ")
+    num_attempts = int(input("Número de tentativas de decifração para mostrar (por exemplo, 10): "))
+    possible_messages = attack_caesar_cipher(ciphertext, num_attempts)
+    print("\nOs", num_attempts, "textos claros mais prováveis são:\n")
+    for i, (plaintext, _) in enumerate(possible_messages, start=1):
+        print(f"Texto Claro #{i}: {plaintext}")
+
+```
+
 ## 6.
+
+```python
+
+import numpy as np
+from sympy import Matrix
+
+# Função para verificar se a matriz é inversível em módulo 26
+def is_invertible(matrix):
+    det = Matrix(matrix).det() % 26
+    return det != 0 and np.gcd(det, 26) == 1
+
+# Função para encontrar a matriz inversa em módulo 26
+def inverse_matrix(matrix):
+    matrix = Matrix(matrix)
+    inv_matrix = matrix.inv_mod(26)
+    return np.array(inv_matrix).astype(int)
+
+# Função para converter texto em números (A=0, B=1, ..., Z=25)
+def text_to_numbers(text):
+    return [ord(char) - ord('A') for char in text]
+
+# Função para converter números em texto
+def numbers_to_text(numbers):
+    return ''.join([chr(num + ord('A')) for num in numbers])
+
+# Função para criptografar uma mensagem usando a cifra de Hill 2x2
+def encrypt(message, key_matrix):
+    message = message.upper().replace(" ", "")
+    while len(message) % 2 != 0:
+        message += 'X'
+
+    message_numbers = text_to_numbers(message)
+    n = len(message_numbers)
+    encrypted_message = ""
+
+    for i in range(0, n, 2):
+        pair = np.array(message_numbers[i:i+2])
+        result = np.dot(key_matrix, pair) % 26
+        encrypted_message += numbers_to_text(result)
+
+    return encrypted_message
+
+# Função para descriptografar uma mensagem usando a cifra de Hill 2x2
+def decrypt(encrypted_message, key_matrix):
+    key_inverse = inverse_matrix(key_matrix)
+    message_numbers = text_to_numbers(encrypted_message)
+    n = len(message_numbers)
+    decrypted_message = ""
+
+    for i in range(0, n, 2):
+        pair = np.array(message_numbers[i:i+2])
+        result = np.dot(key_inverse, pair) % 26
+        decrypted_message += numbers_to_text(result)
+
+    return decrypted_message
+
+# Exemplo de uso:
+if __name__ == "__main__":
+    # Definindo uma nova chave de criptografia (matriz 2x2) que é invertível
+    key_matrix = np.array([[9, 4], [5, 7]])
+
+    # Mensagem original
+    original_message = "HELLO"
+
+    # Criptografando a mensagem
+    encrypted_message = encrypt(original_message, key_matrix)
+    print("Mensagem Criptografada:", encrypted_message)
+
+    # Descriptografando a mensagem
+    decrypted_message = decrypt(encrypted_message, key_matrix)
+    print("Mensagem Descriptografada:", decrypted_message)
+```
   
