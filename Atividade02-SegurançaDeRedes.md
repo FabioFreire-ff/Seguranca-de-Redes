@@ -32,13 +32,70 @@
 
 ## 2. Uma generalização da cifra de César, conhecida como cifra de César afim, tem a seguinte forma: a cada letra de texto claro p, substitua-a pela letra de texto cifrado C:
   
-  (a) Não existem limitações sobre o valor de b. Isso ocorre porque o valor de b determina o deslocamento vertical na cifração, e não afeta a unicidade da cifração. 
+(a) Sim, há limitações sobre o valor de b na cifra de César afim. Para garantir que a função de encriptação seja bijetora (um-para-um), o valor de b deve ser escolhido de modo que gcd(a, 26) divida b.
 
-  (b) 
+(b) Os valores de a que não são permitidos são aqueles em que gcd(a, 26) ≠ 1. Isso ocorre porque, se a e 26 não são coprimos, a função de encriptação não será um-para-um, resultando em letras do texto claro que não são mapeadas de maneira única no texto cifrado.
 
-  (c)
+(c) Uma afirmação geral é que valores de a são permitidos se e somente se gcd(a, 26) = 1. Isso garante que a função de encriptação seja uma permutação de todas as letras do alfabeto, cumprindo o requisito de ser um-para-um. Valores de a que não atendem a essa condição não são permitidos, pois resultam em uma função de encriptação não bijetora.
 
 ## 3. 
+
+## Encriptação usando a cifra de Hill
+
+### Mensagem Original:
+"meet me at the usual place at ten rather than eight oclock"
+
+### Chave da Cifra de Hill:
+K = [9 4]
+    [5 7]
+
+### Conversão da Mensagem para Números:
+- "me" -> [12, 4]
+- "et" -> [4, 19]
+- "me" -> [12, 4]
+- "at" -> [0, 19]
+- "th" -> [19, 7]
+- "eu" -> [4, 20]
+- "su" -> [18, 20]
+- "al" -> [0, 11]
+- "pl" -> [15, 11]
+- "ac" -> [0, 2]
+- "ea" -> [4, 0]
+- "tt" -> [19, 19]
+- "en" -> [4, 13]
+- "ra" -> [17, 0]
+- "th" -> [19, 7]
+- "er" -> [4, 17]
+- "th" -> [19, 7]
+- "an" -> [0, 13]
+- "ei" -> [4, 8]
+- "gh" -> [6, 7]
+- "to" -> [19, 14]
+- "cl" -> [2, 11]
+- "oc" -> [14, 2]
+- "kx" -> [10, 23]
+
+### Aplicação da Cifra de Hill:
+Para cada par de números, multiplicamos pela matriz chave K e reduzimos módulo 26.
+
+**Exemplo:**
+```
+[12  4] * [9  4] = [ (12 * 9 + 4 * 5)  (12 * 4 + 4 * 7) ] = [ 128  76 ]
+         [5  7]   [ (19 * 9 + 7 * 5)  (19  *4 + 7 * 7) ]   [ 209  120 ]
+```
+
+Reduzindo módulo 26:
+[ 128 mod 26  76 mod 26 ] = [ 24  24 ]
+
+Portanto, "me" é encriptado como "yx" (onde 24 corresponde a 'y' e 'x').
+
+### Mensagem Encriptada:
+"yx pc yx ow mz xx xl tz nz wu il ai ti zi rn"
+
+Cada par de letras na mensagem encriptada corresponde a um par encriptado da mensagem original, calculado utilizando a matriz chave K.
+
+
+
 
 ## 4. 
 
